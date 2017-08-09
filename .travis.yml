@@ -8,7 +8,6 @@ before_deploy: echo -e $GPG_SECRET | gpg --import
 deploy:
   provider: script
   script: debuild -S -sa && dput ppa:cs50/ppa ../*.changes
-  skip_cleanup: true
   on:
     branch: master
 notifications:
