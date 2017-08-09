@@ -2,4 +2,6 @@
 !.gitignore
 !.travis.yml
 debian/astyle
+debian/files
 debian/*.log
+debian/*.substvars
