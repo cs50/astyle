@@ -7,7 +7,7 @@ script: debuild -uc -us
 before_deploy: echo -e $GPG_SECRET | gpg --import
 deploy:
   provider: script
-  script: debuild -S -sa && dput ppa:cs50/ppa ../*.changes
+  script: debuild -S -sa && dput ppa:cs50/ppa ../*_source.changes
   on:
     branch: master
 notifications:
