@@ -8,7 +8,7 @@ addons:
     - devscripts
     - dh-make
 install: true
-script: debuild -S -sa
+script: sudo debuild -S -sa
 before_deploy: echo -e $GPG_SECRET | gpg --import
 deploy:
 - provider: script
