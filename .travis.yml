@@ -3,7 +3,7 @@ branches:
   except: "/^v\\d/"
 before_install: sudo apt-get install -y devscripts dh-make
 install: true
-script: debuild -S -sa
+script: debuild -uc -us
 before_deploy: echo -e $GPG_SECRET | gpg --import
 deploy:
 - provider: script
@@ -13,7 +13,7 @@ deploy:
   on:
     branch: master
 - provider: script
-  script: dput ppa:cs50/ppa build/deb/*.changes
+  script: debuild -S -sa && dput ppa:cs50/ppa ../*.changes
   skip_cleanup: true
   on:
     branch: master
