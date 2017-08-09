@@ -1,0 +1,27 @@
+sudo: required
+branches:
+  except: "/^v\\d/"
+before_install:
+addons:
+  apt:
+    packages:
+    - devscripts
+    - dh-make
+install: true
+script: debuild -S -sa
+before_deploy: echo -e $GPG_SECRET | gpg --import
+deploy:
+- provider: script
+  script: 'curl --fail --data "{ \"tag_name\": \"v$(make version)\", \"target_commitish\":
+    \"$TRAVIS_COMMIT\", \"name\": \"v$(make version)\" }" --user bot50:$GITHUB_TOKEN
+    https://api.github.com/repos/$TRAVIS_REPO_SLUG/releases'
+  on:
+    branch: master
+- provider: script
+  script: dput ppa:cs50/ppa build/deb/*.changes
+  skip_cleanup: true
+  on:
+    branch: master
+notifications:
+  slack:
+    secure: fkbBAlu1Er8/Di/ngLBzfEh6TQiHRsH63nIABagVR62okH3Ff/ttVdoH5l2sNRA+nH5foiSVYRXXRopimyOYxkhVqgoDc9Osp05j3wuugrOTYmPoSSgm1tF+CtpynXooil5sSEbUX6IWoybYg3YojpXB7Z5YMxHWgNOct564B09ar4aS75rqrnRin4wSKjYQO8MCy0TpTjTUJAQs7IoR3jXvFYvCSLfVuRA1OQaVEoQOfTcQo6lHoe7poyK1MkUL5rnl5Y6K04/N/bn+86o7j6np0jTjpuuL+L8CAFARseWUq7BSId8Q5YeNUwvrQ/1tg/smBTE776XCdV48AiCczBPgpdiDzKALLLdGXRwaXsHIrfzy7ZpdhPInxojHA6DO9l6JaJ9asi5Vhv25JeL1k1aNvJy7E0UyQOQcF5X+PE9ReqayVKUGxciKmSGTyO7OwcfWPc9Z4GkX2AfAmtvH/e3NNe3j/YJCfeSMQ3oDDMzmslzkj+k33KHTwGH78N03lPNAS2Ek2BAazhg16VtEHA4N7abonRSejkbljWURnu5AMaCra4ciAJA6G9ITvSdfQj/WvVsDWk5m4CSB2mhkiZNtchiugu9UuuZOiBwOa5qlvMS4RIeTsqvQkrvVtH/HNrnQqxDKwaxsKTMtfPpMjIy/QKg9YSGTXNw9i+OonZc=
