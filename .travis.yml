@@ -1,3 +1,4 @@
+sudo: required
 branches:
   except: "/^v\\d/"
 before_install:
